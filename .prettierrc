@@ -1,0 +1,29 @@
+{
+  "singleQuote": true,
+  "trailingComma": "all",
+  "printWidth": 100,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "bracketSpacing": true,
+  "arrowParens": "avoid",
+  "endOfLine": "lf",
+  "quoteProps": "as-needed",
+  "proseWrap": "preserve",
+  "htmlWhitespaceSensitivity": "css",
+  "embeddedLanguageFormatting": "auto",
+  "overrides": [
+    {
+      "files": ["*.html"],
+      "options": { "parser": "angular" }
+    },
+    {
+      "files": ["*.ts", "*.js", "*.tsx", "*.jsx"],
+      "options": { "parser": "typescript" }
+    },
+    {
+      "files": ["*.md"],
+      "options": { "proseWrap": "always" }
+    }
+  ]
+}

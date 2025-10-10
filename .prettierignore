@@ -1,0 +1,61 @@
+# Build outputs
+dist
+out-tsc
+build
+.storybook-static
+
+# Angular build/cache
+.angular
+.angular/cache
+
+# Tool caches
+.cache
+.parcel-cache
+.next
+.vite
+.rushstack
+.esbuild
+/.turbo
+
+# Dependency folders
+node_modules
+
+# Coverage reports
+coverage
+
+# Environment files (ignore all env variants)
+.env*
+.env.*.local
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs / editors
+.vscode
+.idea
+.history
+
+# Lock files (don't format these)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Static/public assets (optional if you don't want formatting)
+public
+assets
+
+# Minified / generated files / maps
+*.min.js
+*.map
+*.bundle.js
+
+# Misc / CI / deployment artifacts
+dist-*
+.deployment
+.vercel
+.netlify
+firebase-debug.log

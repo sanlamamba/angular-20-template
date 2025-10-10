@@ -1,0 +1,64 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Fail fast and be safe with variables
+set -eu
+
+# --- Pretty output (only if TTY) ---
+if [ -t 1 ]; then
+  GRN='\033[32m'; YEL='\033[33m'; RED='\033[31m'; BOLD='\033[1m'; NC='\033[0m'
+else
+  GRN=''; YEL=''; RED=''; BOLD=''; NC=''
+fi
+
+MSG_FILE="${1:-}"
+
+echo "${BOLD}📝 Validating commit message...${NC}"
+
+# --- Find the best way to run commitlint without hitting the network ---
+CMD=""
+
+# 1) Local bin if present (fastest, no spawn overhead from package managers)
+if [ -x "./node_modules/.bin/commitlint" ]; then
+  CMD="./node_modules/.bin/commitlint"
+fi
+
+# 2) pnpm (fast, respects workspace)
+if [ -z "${CMD}" ] && command -v pnpm >/dev/null 2>&1; then
+  if pnpm exec --which commitlint >/dev/null 2>&1; then
+    CMD="pnpm exec commitlint"
+  fi
+fi
+
+# 3) yarn dlx (Yarn 2+/Berry) or yarn exec (if available)
+if [ -z "${CMD}" ] && command -v yarn >/dev/null 2>&1; then
+  if yarn -v >/dev/null 2>&1 && yarn dlx --help >/dev/null 2>&1; then
+    CMD="yarn dlx commitlint"
+  elif yarn exec commitlint --version >/dev/null 2>&1 2>/dev/null; then
+    CMD="yarn exec commitlint"
+  fi
+fi
+
+# 4) npx without install (no network); falls back to warning if not installed
+if [ -z "${CMD}" ] && command -v npx >/dev/null 2>&1; then
+  if npx --no-install commitlint --version >/dev/null 2>&1; then
+    CMD="npx --no -- commitlint"
+  fi
+fi
+
+# If we still don't have commitlint, don't block the commit; gently warn.
+if [ -z "${CMD}" ]; then
+  echo "${YEL}⚠️  commitlint not found. Skipping commit message validation."
+  echo "   Install it locally to enable checks: ${BOLD}npm i -D @commitlint/cli @commitlint/config-conventional${NC}"
+  exit 0
+fi
+
+# --- Run commitlint ---
+# Use --edit to read the message file provided by Git.
+if ${CMD} --edit "${MSG_FILE}"; then
+  echo "${GRN}✅ Commit message validated!${NC}"
+  exit 0
+else
+  echo "${RED}❌ Commit message failed validation. Fix the message and try again.${NC}"
+  exit 1
+fi

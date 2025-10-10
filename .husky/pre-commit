@@ -1,0 +1,72 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Fail fast and be safe with variables
+set -eu
+
+# --- Pretty output (only if TTY) ---
+if [ -t 1 ]; then
+  GRN='\033[32m'; YEL='\033[33m'; RED='\033[31m'; BOLD='\033[1m'; NC='\033[0m'
+else
+  GRN=''; YEL=''; RED=''; BOLD=''; NC=''
+fi
+
+echo "${BOLD}🔍 Running lint-staged...${NC}"
+
+# Skip if nothing is staged (common fast-path)
+if git diff --quiet --cached --; then
+  echo "${YEL}ℹ️  No staged changes — skipping lint-staged.${NC}"
+  exit 0
+fi
+
+# --- Find the best way to run lint-staged without hitting the network ---
+CMD=""
+
+# 1) Local binary (fastest)
+if [ -x "./node_modules/.bin/lint-staged" ]; then
+  CMD="./node_modules/.bin/lint-staged"
+fi
+
+# 2) pnpm (workspace-aware)
+if [ -z "${CMD}" ] && command -v pnpm >/dev/null 2>&1; then
+  if pnpm exec --which lint-staged >/dev/null 2>&1; then
+    CMD="pnpm exec lint-staged"
+  fi
+fi
+
+# 3) yarn (Berry/Classic)
+if [ -z "${CMD}" ] && command -v yarn >/dev/null 2>&1; then
+  if yarn -v >/dev/null 2>&1 && yarn dlx --help >/dev/null 2>&1; then
+    CMD="yarn dlx lint-staged"
+  elif yarn exec lint-staged --version >/dev/null 2>&1 2>/dev/null; then
+    CMD="yarn exec lint-staged"
+  fi
+fi
+
+# 4) npx without install (no network)
+if [ -z "${CMD}" ] && command -v npx >/dev/null 2>&1; then
+  if npx --no-install lint-staged --version >/dev/null 2>&1; then
+    CMD="npx --no -- lint-staged"
+  fi
+fi
+
+# If still not found, don't block committing; warn instead.
+if [ -z "${CMD}" ]; then
+  echo "${YEL}⚠️  lint-staged not found. Skipping pre-commit checks."
+  echo "   Install it to enable checks: ${BOLD}npm i -D lint-staged${NC}"
+  exit 0
+fi
+
+# Optional: quiet some npm noise in hooks
+export npm_config_fund=false
+export npm_config_audit=false
+export npm_config_update_notifier=false
+
+# --- Run lint-staged on staged files ---
+if ${CMD}; then
+  echo "${GRN}✅ Pre-commit checks passed!${NC}"
+  exit 0
+else
+  echo "${RED}❌ Pre-commit checks failed. Fix issues and try again.${NC}"
+  exit 1
+fi
