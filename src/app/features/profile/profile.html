@@ -1,84 +1,88 @@
-<div class="container mx-auto p-6 max-w-4xl">
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Profile</h1>
-    <p class="text-gray-600 dark:text-gray-400">View and manage your account information</p>
-  </div>
-
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <div class="md:col-span-1">
-      <p-card>
-        <div class="text-center">
-          <div
-            class="w-24 h-24 rounded-full bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800 mx-auto mb-4 flex items-center justify-center shadow-lg"
-          >
-            <i class="pi pi-user text-5xl text-primary-600 dark:text-primary-300"></i>
-          </div>
-          <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-            {{ auth.currentUser()?.name }}
-          </h2>
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
-            {{ auth.currentUser()?.email }}
-          </p>
-          <span [class]="auth.currentUser()?.role | roleBadge">
-            {{ auth.currentUser()?.role }}
-          </span>
-        </div>
-      </p-card>
+<app-layout>
+  <div class="max-w-4xl mx-auto">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Profile</h1>
+      <p class="text-gray-600 dark:text-gray-400">View and manage your account information</p>
     </div>
 
-    <div class="md:col-span-2">
-      <p-card>
-        <ng-template pTemplate="header">
-          <div class="px-6 pt-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Account Information</h3>
-          </div>
-        </ng-template>
-
-        <div class="space-y-4">
-          <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
-            <span class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-              Full Name
-            </span>
-            <p class="text-gray-900 dark:text-white">{{ auth.currentUser()?.name }}</p>
-          </div>
-
-          <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
-            <span class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-              Email Address
-            </span>
-            <p class="text-gray-900 dark:text-white">{{ auth.currentUser()?.email }}</p>
-          </div>
-
-          <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
-            <span class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-              Role
-            </span>
-            <p class="text-gray-900 dark:text-white capitalize">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="md:col-span-1">
+        <p-card>
+          <div class="text-center">
+            <div
+              class="w-24 h-24 rounded-full bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800 mx-auto mb-4 flex items-center justify-center shadow-lg"
+            >
+              <i class="pi pi-user text-5xl text-primary-600 dark:text-primary-300"></i>
+            </div>
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              {{ auth.currentUser()?.name }}
+            </h2>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+              {{ auth.currentUser()?.email }}
+            </p>
+            <span [class]="auth.currentUser()?.role | roleBadge">
               {{ auth.currentUser()?.role }}
-            </p>
+            </span>
+          </div>
+        </p-card>
+      </div>
+
+      <div class="md:col-span-2">
+        <p-card>
+          <ng-template pTemplate="header">
+            <div class="px-6 pt-6">
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                Account Information
+              </h3>
+            </div>
+          </ng-template>
+
+          <div class="space-y-4">
+            <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+              <span class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+                Full Name
+              </span>
+              <p class="text-gray-900 dark:text-white">{{ auth.currentUser()?.name }}</p>
+            </div>
+
+            <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+              <span class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+                Email Address
+              </span>
+              <p class="text-gray-900 dark:text-white">{{ auth.currentUser()?.email }}</p>
+            </div>
+
+            <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+              <span class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+                Role
+              </span>
+              <p class="text-gray-900 dark:text-white capitalize">
+                {{ auth.currentUser()?.role }}
+              </p>
+            </div>
+
+            <div class="pt-4">
+              <p class="text-sm text-gray-600 dark:text-gray-400">
+                <i class="pi pi-info-circle mr-2"></i>
+                This is a demo profile page. In a real application, you would be able to edit your
+                information here.
+              </p>
+            </div>
           </div>
 
-          <div class="pt-4">
-            <p class="text-sm text-gray-600 dark:text-gray-400">
-              <i class="pi pi-info-circle mr-2"></i>
-              This is a demo profile page. In a real application, you would be able to edit your
-              information here.
-            </p>
-          </div>
-        </div>
-
-        <ng-template pTemplate="footer">
-          <div class="flex justify-end gap-3 px-6 pb-6">
-            <p-button label="Edit Profile" icon="pi pi-pencil" [disabled]="true" />
-            <p-button
-              label="Change Password"
-              icon="pi pi-lock"
-              [disabled]="true"
-              severity="secondary"
-            />
-          </div>
-        </ng-template>
-      </p-card>
+          <ng-template pTemplate="footer">
+            <div class="flex justify-end gap-3 px-6 pb-6">
+              <p-button label="Edit Profile" icon="pi pi-pencil" [disabled]="true" />
+              <p-button
+                label="Change Password"
+                icon="pi pi-lock"
+                [disabled]="true"
+                severity="secondary"
+              />
+            </div>
+          </ng-template>
+        </p-card>
+      </div>
     </div>
   </div>
-</div>
+</app-layout>
