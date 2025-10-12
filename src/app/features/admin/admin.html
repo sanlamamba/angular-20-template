@@ -49,15 +49,7 @@
           <td>{{ user.name }}</td>
           <td>{{ user.email }}</td>
           <td>
-            <span
-              class="px-2 py-1 text-xs font-semibold rounded-full"
-              [class]="{
-                'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200':
-                  user.role === 'admin',
-                'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200':
-                  user.role === 'user',
-              }"
-            >
+            <span [class]="user.role | roleBadge">
               {{ user.role }}
             </span>
           </td>

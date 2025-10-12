@@ -1,5 +1,6 @@
 import { Injectable, signal, computed, PLATFORM_ID, inject, effect } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import * as LocalStorage from '@shared/utils/local-storage.util';
 
 /**
  * Theme Service
@@ -61,7 +62,7 @@ export class ThemeService {
    * @private
    */
   private initializeTheme(): void {
-    const storedTheme = localStorage.getItem('theme');
+    const storedTheme = LocalStorage.getItem<string>('theme');
 
     if (storedTheme) {
       const isDark = storedTheme === 'dark';
@@ -74,7 +75,7 @@ export class ThemeService {
     }
 
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-      if (!localStorage.getItem('theme')) {
+      if (!LocalStorage.hasItem('theme')) {
         this.isDarkModeSignal.set(e.matches);
       }
     });
@@ -104,6 +105,6 @@ export class ThemeService {
    */
   private persistTheme(isDark: boolean): void {
     if (!this.isBrowser) return;
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    LocalStorage.setItem('theme', isDark ? 'dark' : 'light');
   }
 }

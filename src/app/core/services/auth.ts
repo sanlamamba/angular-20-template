@@ -5,6 +5,7 @@ import { User, DEMO_USERS } from '@core/models/user';
 import { AuthResponse, JWTPayload } from '@core/models/auth-response';
 import { environment } from '@environments/environment';
 import { isPlatformBrowser } from '@angular/common';
+import * as Storage from '@shared/utils/storage.util';
 
 /**
  * Authentication Service
@@ -161,9 +162,9 @@ export class Auth {
    */
   logout(): void {
     // Clear storage
-    sessionStorage.removeItem('accessToken');
-    sessionStorage.removeItem('currentUser');
-    sessionStorage.removeItem('tokenExpiry');
+    Storage.removeItem('accessToken');
+    Storage.removeItem('currentUser');
+    Storage.removeItem('tokenExpiry');
 
     // Clear signals
     this.currentUserSignal.set(null);
@@ -209,10 +210,9 @@ export class Auth {
    * @private
    */
   private isTokenExpired(): boolean {
-    const expiryStr = sessionStorage.getItem('tokenExpiry');
-    if (!expiryStr) return true;
+    const expiry = Storage.getItem<number>('tokenExpiry');
+    if (!expiry) return true;
 
-    const expiry = parseInt(expiryStr, 10);
     return Date.now() >= expiry;
   }
 
@@ -223,9 +223,9 @@ export class Auth {
   private storeAuth(response: AuthResponse): void {
     // Store in sessionStorage (DEMO ONLY - see security notes)
     // TODO : Use HttpOnly cookies in production for better security
-    sessionStorage.setItem('accessToken', response.token);
-    sessionStorage.setItem('currentUser', JSON.stringify(response.user));
-    sessionStorage.setItem('tokenExpiry', response.expiresAt.toString());
+    Storage.setItem('accessToken', response.token);
+    Storage.setItem('currentUser', response.user);
+    Storage.setItem('tokenExpiry', response.expiresAt);
 
     // Update signals
     this.tokenSignal.set(response.token);
@@ -237,30 +237,23 @@ export class Auth {
    * @private
    */
   private checkStoredAuth(): void {
-    const token = sessionStorage.getItem('accessToken');
-    const userStr = sessionStorage.getItem('currentUser');
-    const expiryStr = sessionStorage.getItem('tokenExpiry');
+    const token = Storage.getItem<string>('accessToken');
+    const user = Storage.getItem<User>('currentUser');
+    const expiry = Storage.getItem<number>('tokenExpiry');
 
-    if (!token || !userStr || !expiryStr) {
+    if (!token || !user || !expiry) {
       return;
     }
 
     // Check if token is expired
-    const expiry = parseInt(expiryStr, 10);
     if (Date.now() >= expiry) {
       this.logout();
       return;
     }
 
     // Restore user state
-    try {
-      const user: User = JSON.parse(userStr);
-      this.tokenSignal.set(token);
-      this.currentUserSignal.set(user);
-    } catch (error) {
-      console.error('Failed to parse stored user', error);
-      this.logout();
-    }
+    this.tokenSignal.set(token);
+    this.currentUserSignal.set(user);
   }
 
   /**

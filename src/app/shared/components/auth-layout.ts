@@ -3,6 +3,7 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { ThemeService } from '@core/services/theme';
 import { Loading } from '@app/core/services/loading';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-auth-layout',
@@ -59,6 +60,11 @@ export class AuthLayout {
     }, 3000);
   }
   simulateError() {
-    throw new Error('Simulated error for testing purposes');
+    const http = inject(HttpClient);
+
+    http.get('https://jsonplaceholder.typicode.com/posts/1').subscribe({
+      next: (data) => console.log('✅ Success:', data),
+      error: (err) => console.error('❌ Error:', err),
+    });
   }
 }

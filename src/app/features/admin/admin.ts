@@ -3,6 +3,7 @@ import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
 import { Auth } from '@core/services/auth';
 import { DEMO_USERS } from '@app/core/models/user';
+import { RoleBadgePipe } from '@shared/pipes/role-badge.pipe';
 
 interface AdminStat {
   label: string;
@@ -13,7 +14,7 @@ interface AdminStat {
 
 @Component({
   selector: 'app-admin',
-  imports: [CardModule, TableModule],
+  imports: [CardModule, TableModule, RoleBadgePipe],
   templateUrl: './admin.html',
   styleUrl: './admin.css',
 })

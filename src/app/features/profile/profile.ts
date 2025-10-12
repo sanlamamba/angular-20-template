@@ -3,9 +3,11 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { Auth } from '@core/services/auth';
 
+import { RoleBadgePipe } from '@shared/pipes/role-badge.pipe';
+
 @Component({
   selector: 'app-profile',
-  imports: [CardModule, ButtonModule],
+  imports: [CardModule, ButtonModule, RoleBadgePipe],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })

@@ -8,6 +8,11 @@ import { CardModule } from 'primeng/card';
 import { MessageService } from 'primeng/api';
 import { Auth } from '@core/services/auth';
 import { AuthLayout } from '@shared/components/auth-layout';
+import {
+  emailValidator,
+  strongPasswordValidator,
+  matchFieldValidator,
+} from '@shared/utils/validator.util';
 
 @Component({
   selector: 'app-register',
@@ -32,25 +37,14 @@ export class Register {
 
   protected registerForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(2)]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(8)]),
-    confirmPassword: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, emailValidator()]),
+    password: new FormControl('', [Validators.required, strongPasswordValidator()]),
+    confirmPassword: new FormControl('', [Validators.required, matchFieldValidator('password')]),
   });
 
   async onSubmit() {
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
-      return;
-    }
-
-    const { password, confirmPassword } = this.registerForm.value;
-    if (password !== confirmPassword) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Validation Error',
-        detail: 'Passwords do not match',
-        life: 5000,
-      });
       return;
     }
 

@@ -19,15 +19,7 @@
           <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
             {{ auth.currentUser()?.email }}
           </p>
-          <span
-            class="px-3 py-1 text-xs font-semibold rounded-full shadow-sm transition-colors duration-200"
-            [class]="{
-              'bg-purple-100 text-purple-800 dark:bg-purple-900/70 dark:text-purple-200':
-                auth.currentUser()?.role === 'admin',
-              'bg-blue-100 text-blue-800 dark:bg-blue-900/70 dark:text-blue-200':
-                auth.currentUser()?.role === 'user',
-            }"
-          >
+          <span [class]="auth.currentUser()?.role | roleBadge">
             {{ auth.currentUser()?.role }}
           </span>
         </div>

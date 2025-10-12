@@ -9,6 +9,7 @@ import { MessageService } from 'primeng/api';
 import { Auth } from '@core/services/auth';
 import { AuthLayout } from '@shared/components/auth-layout';
 import { DemoCredentials } from '@shared/components/demo-credentials';
+import { emailValidator } from '@shared/utils/validator.util';
 
 @Component({
   selector: 'app-login',
@@ -33,7 +34,7 @@ export class Login {
   protected isLoading = signal(false);
 
   protected loginForm = new FormGroup({
-    email: new FormControl('admin@angular.com', [Validators.required, Validators.email]),
+    email: new FormControl('admin@angular.com', [Validators.required, emailValidator()]),
     password: new FormControl('Admin2025!', [Validators.required]),
   });
 
