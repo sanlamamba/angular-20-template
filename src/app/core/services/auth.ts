@@ -84,7 +84,7 @@ export class Auth {
         }
 
         const token = this.generateFakeJWT(user);
-        const expiresAt = Date.now() + environment.tokenExpiry;
+        const expiresAt = Date.now() + environment.auth.tokenExpiry;
 
         const response: AuthResponse = {
           token,
@@ -137,7 +137,7 @@ export class Auth {
         };
 
         const token = this.generateFakeJWT(newUser);
-        const expiresAt = Date.now() + environment.tokenExpiry;
+        const expiresAt = Date.now() + environment.auth.tokenExpiry;
 
         const response: AuthResponse = {
           token,
@@ -271,7 +271,7 @@ export class Auth {
     };
 
     const now = Math.floor(Date.now() / 1000);
-    const expiresIn = environment.tokenExpiry / 1000; // Convert ms to seconds
+    const expiresIn = environment.auth.tokenExpiry / 1000; // Convert ms to seconds
 
     const payload: JWTPayload = {
       sub: user.email,
