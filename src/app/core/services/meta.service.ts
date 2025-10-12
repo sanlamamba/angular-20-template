@@ -4,19 +4,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { environment } from '@environments/environment';
 
 /**
- * Meta Service for SEO
- *
- * Manages page title and meta tags for SEO optimization.
- * Essential for SSR applications.
- *
- * @example
- * ```typescript
- * metaService.setPageMeta({
- *   title: 'Dashboard',
- *   description: 'View your analytics dashboard',
- *   image: '/assets/dashboard-og.png',
- * });
- * ```
+ * Meta Service for SEO - Manages page title and meta tags.
  */
 @Injectable({
   providedIn: 'root',
@@ -27,9 +15,6 @@ export class MetaService {
   private platformId = inject(PLATFORM_ID);
   private isBrowser = isPlatformBrowser(this.platformId);
 
-  /**
-   * Set page metadata
-   */
   setPageMeta(config: PageMetaConfig): void {
     const fullTitle = config.title
       ? `${config.title} | ${environment.seo.siteName}`
@@ -69,9 +54,6 @@ export class MetaService {
     this.meta.updateTag({ name: 'robots', content: robots });
   }
 
-  /**
-   * Add structured data (JSON-LD)
-   */
   addStructuredData(data: Record<string, unknown>): void {
     if (!this.isBrowser) return;
 
@@ -86,9 +68,6 @@ export class MetaService {
     script.textContent = JSON.stringify(data);
   }
 
-  /**
-   * Set canonical URL
-   */
   setCanonicalUrl(url: string): void {
     if (!this.isBrowser) return;
 

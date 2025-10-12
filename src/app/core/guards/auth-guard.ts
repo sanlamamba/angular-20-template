@@ -2,18 +2,6 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { Auth } from '@core/services/auth';
 
-/**
- * Auth Guard - Protects routes from unauthenticated access
- *
- * @example
- * ```typescript
- * {
- *   path: 'dashboard',
- *   component: Dashboard,
- *   canActivate: [authGuard]
- * }
- * ```
- */
 export const authGuard: CanActivateFn = (_route, state) => {
   const auth = inject(Auth);
   const router = inject(Router);
@@ -29,19 +17,6 @@ export const authGuard: CanActivateFn = (_route, state) => {
   return false;
 };
 
-/**
- * Role Guard - Protects routes from unauthorized access based on user role
- *
- * @example
- * ```typescript
- * {
- *   path: 'admin',
- *   component: Admin,
- *   canActivate: [roleGuard],
- *   data: { role: 'admin' }
- * }
- * ```
- */
 export const roleGuard: CanActivateFn = (route, state) => {
   const auth = inject(Auth);
   const router = inject(Router);

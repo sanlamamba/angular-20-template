@@ -1,15 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 /**
- * Initials Pipe
- *
- * Extracts initials from a name (first letter of each word).
- *
- * @example
- * ```html
- * <div>{{ user.name | initials }}</div>
- * <!-- "John Doe" becomes "JD" -->
- * ```
+ * Extracts initials from a name (first letter of each word)
  */
 @Pipe({
   name: 'initials',

@@ -1,48 +1,21 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 /**
- * Validator for strong passwords
- *
- * Requirements:
- * - At least 8 characters
- * - Contains uppercase letter
- * - Contains lowercase letter
- * - Contains number
- * - Contains special character (!@#$%^&*)
- *
- * @returns Validator function
- *
- * @example
- * ```typescript
- * this.form = new FormGroup({
- *   password: new FormControl('', [
- *     Validators.required,
- *     strongPasswordValidator()
- *   ])
- * });
- * ```
+ * Strong password validator
+ * Requirements: 8+ chars, uppercase, lowercase, number, special character
  */
 export function strongPasswordValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const value = control.value;
 
     if (!value) {
-      return null; // Don't validate empty values (use Validators.required for that)
+      return null;
     }
 
-    // Check minimum length
     const hasMinLength = value.length >= 8;
-
-    // Check for uppercase letter
     const hasUpperCase = /[A-Z]/.test(value);
-
-    // Check for lowercase letter
     const hasLowerCase = /[a-z]/.test(value);
-
-    // Check for number
     const hasNumber = /[0-9]/.test(value);
-
-    // Check for special character
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
 
     const passwordValid =
@@ -67,31 +40,16 @@ export function strongPasswordValidator(): ValidatorFn {
 }
 
 /**
- * Validator for email format
- *
- * More strict than Angular's built-in email validator.
- *
- * @returns Validator function
- *
- * @example
- * ```typescript
- * this.form = new FormGroup({
- *   email: new FormControl('', [
- *     Validators.required,
- *     emailValidator()
- *   ])
- * });
- * ```
+ * Email validator (stricter than Angular's built-in)
  */
 export function emailValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const value = control.value;
 
     if (!value) {
-      return null; // Don't validate empty values (use Validators.required for that)
+      return null;
     }
 
-    // RFC 5322 simplified email regex
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const BANNED_DOMAINS = ['baddomain.com', 'spamdomain.org', 'tempmail.com'];
 
@@ -107,21 +65,7 @@ export function emailValidator(): ValidatorFn {
 }
 
 /**
- * Validator for numeric range
- *
- * @param min - Minimum value (inclusive)
- * @param max - Maximum value (inclusive)
- * @returns Validator function
- *
- * @example
- * ```typescript
- * this.form = new FormGroup({
- *   age: new FormControl('', [
- *     Validators.required,
- *     rangeValidator(18, 100)
- *   ])
- * });
- * ```
+ * Numeric range validator
  */
 export function rangeValidator(min: number, max: number): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -152,27 +96,12 @@ export function rangeValidator(min: number, max: number): ValidatorFn {
 }
 
 /**
- * Validator to match two form fields
- *
- * Useful for password confirmation, email confirmation, etc.
- *
- * @param fieldName - Name of the field to match against
- * @returns Validator function
- *
- * @example
- * ```typescript
- * this.form = new FormGroup({
- *   password: new FormControl(''),
- *   confirmPassword: new FormControl('', [
- *     matchFieldValidator('password')
- *   ])
- * });
- * ```
+ * Field match validator (e.g., for password confirmation)
  */
 export function matchFieldValidator(fieldName: string): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     if (!control.parent) {
-      return null; // No parent form yet
+      return null;
     }
 
     const field = control.parent.get(fieldName);

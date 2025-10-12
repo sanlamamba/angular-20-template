@@ -3,9 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import * as LocalStorage from '@shared/utils/local-storage.util';
 
 /**
- * Theme Service
- * Manages dark mode state across the application using Signals.
- * Automatically persists theme preference to localStorage.
+ * Theme Service - Manages dark mode state using Signals.
  */
 @Injectable({
   providedIn: 'root',
@@ -14,24 +12,12 @@ export class ThemeService {
   private platformId = inject(PLATFORM_ID);
   private isBrowser = isPlatformBrowser(this.platformId);
 
-  /**
-   * Dark mode state signal
-   * @private
-   */
   private isDarkModeSignal = signal<boolean>(false);
 
-  /**
-   * Public read-only access to dark mode state
-   */
   readonly isDarkMode = this.isDarkModeSignal.asReadonly();
-
-  /**
-   * Computed: Current theme name
-   */
   readonly currentTheme = computed(() => (this.isDarkModeSignal() ? 'dark' : 'light'));
 
   constructor() {
-    // Initialize theme from localStorage or system preference
     if (this.isBrowser) {
       this.initializeTheme();
       effect(() => {
@@ -42,25 +28,14 @@ export class ThemeService {
     }
   }
 
-  /**
-   * Toggle dark mode on/off
-   */
   toggleDarkMode(): void {
     this.isDarkModeSignal.update((current) => !current);
   }
 
-  /**
-   * Set dark mode explicitly
-   * @param isDark - true for dark mode, false for light mode
-   */
   setDarkMode(isDark: boolean): void {
     this.isDarkModeSignal.set(isDark);
   }
 
-  /**
-   * Initialize theme from localStorage or system preference
-   * @private
-   */
   private initializeTheme(): void {
     const storedTheme = LocalStorage.getItem<string>('theme');
 
@@ -81,10 +56,6 @@ export class ThemeService {
     });
   }
 
-  /**
-   * Apply theme to the document
-   * @private
-   */
   private applyTheme(isDark: boolean): void {
     if (!this.isBrowser) return;
 
@@ -99,10 +70,6 @@ export class ThemeService {
     }
   }
 
-  /**
-   * Persist theme preference to localStorage
-   * @private
-   */
   private persistTheme(isDark: boolean): void {
     if (!this.isBrowser) return;
     LocalStorage.setItem('theme', isDark ? 'dark' : 'light');

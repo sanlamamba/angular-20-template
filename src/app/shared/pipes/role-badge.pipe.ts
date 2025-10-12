@@ -1,15 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 /**
- * Role Badge Pipe
- *
- * Returns CSS classes for role badges with consistent styling
- * across the application.
- *
- * @example
- * ```html
- * <span [class]="user.role | roleBadge">{{ user.role }}</span>
- * ```
+ * Returns CSS classes for role badges
  */
 @Pipe({
   name: 'roleBadge',

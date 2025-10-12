@@ -5,25 +5,8 @@ import { catchError, retryWhen, mergeMap } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 
 /**
- * Base API Service
- *
- * Provides a centralized HTTP service with:
- * - Retry logic for failed requests
- * - Timeout handling
- * - Error transformation
- * - Base URL configuration
- *
- * Use this service as a base for your domain-specific API services.
- *
- * @example
- * ```typescript
- * @Injectable({ providedIn: 'root' })
- * export class UserApiService extends ApiService {
- *   getUsers() {
- *     return this.get<User[]>('/users');
- *   }
- * }
- * ```
+ * Base API Service with retry logic and error handling.
+ * Extend this for domain-specific API services.
  */
 @Injectable({
   providedIn: 'root',
@@ -32,9 +15,6 @@ export class ApiService {
   private http = inject(HttpClient);
   protected baseUrl = environment.api.baseUrl;
 
-  /**
-   * HTTP GET request with retry logic
-   */
   protected get<T>(endpoint: string, options?: RequestOptions): Observable<T> {
     return this.http
       .get<T>(`${this.baseUrl}${endpoint}`, {
@@ -48,9 +28,6 @@ export class ApiService {
       );
   }
 
-  /**
-   * HTTP POST request with retry logic
-   */
   protected post<T>(endpoint: string, body: unknown, options?: RequestOptions): Observable<T> {
     return this.http
       .post<T>(`${this.baseUrl}${endpoint}`, body, {
@@ -64,9 +41,6 @@ export class ApiService {
       );
   }
 
-  /**
-   * HTTP PUT request with retry logic
-   */
   protected put<T>(endpoint: string, body: unknown, options?: RequestOptions): Observable<T> {
     return this.http
       .put<T>(`${this.baseUrl}${endpoint}`, body, {
@@ -80,9 +54,6 @@ export class ApiService {
       );
   }
 
-  /**
-   * HTTP PATCH request with retry logic
-   */
   protected patch<T>(endpoint: string, body: unknown, options?: RequestOptions): Observable<T> {
     return this.http
       .patch<T>(`${this.baseUrl}${endpoint}`, body, {
@@ -96,9 +67,6 @@ export class ApiService {
       );
   }
 
-  /**
-   * HTTP DELETE request with retry logic
-   */
   protected delete<T>(endpoint: string, options?: RequestOptions): Observable<T> {
     return this.http
       .delete<T>(`${this.baseUrl}${endpoint}`, {
@@ -112,10 +80,6 @@ export class ApiService {
       );
   }
 
-  /**
-   * Retry strategy for failed requests
-   * Retries only on network errors or 5xx server errors
-   */
   private retryStrategy(errors: Observable<HttpErrorResponse>, options?: RequestOptions) {
     const maxRetries = options?.retryAttempts ?? environment.api.retryAttempts;
     const retryDelay = options?.retryDelay ?? environment.api.retryDelay;
@@ -140,9 +104,6 @@ export class ApiService {
     );
   }
 
-  /**
-   * Transform HTTP errors into friendly error objects
-   */
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An unexpected error occurred';
 
@@ -160,9 +121,6 @@ export class ApiService {
   }
 }
 
-/**
- * Custom API Error class
- */
 export class ApiError extends Error {
   constructor(
     message: string,
@@ -174,9 +132,6 @@ export class ApiError extends Error {
   }
 }
 
-/**
- * Request options interface
- */
 export interface RequestOptions {
   headers?: Record<string, string>;
   params?: Record<string, string | number | boolean>;
