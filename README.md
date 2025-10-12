@@ -21,7 +21,7 @@ A production-ready Angular 20 template with modern best practices, comprehensive
 
 ### Authentication & Security
 
-- 🔐 **JWT Authentication** (demo implementation)
+- 🔐 **HttpOnly Cookie Authentication** with XSRF protection
 - 🛡️ **Role-Based Access Control** (RBAC)
 - 🔒 **Route Guards** (auth & role guards)
 - 🔐 **HTTP Interceptors** (auth, error, loading)

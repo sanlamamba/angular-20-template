@@ -2,7 +2,12 @@ import { ApplicationConfig, ErrorHandler, provideZoneChangeDetection } from '@an
 import { provideRouter, withPreloading, PreloadAllModules } from '@angular/router';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withFetch,
+  withInterceptors,
+  withXsrfConfiguration,
+} from '@angular/common/http';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import { GlobalErrorHandler } from '@core/services/error-handler';
@@ -18,10 +23,14 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideClientHydration(withEventReplay()),
-    provideAnimationsAsync(), // TODO Fix deprecation warning when using provideAnimationsAsync
+    provideAnimationsAsync(),
     provideHttpClient(
       withFetch(),
       withInterceptors([loadingInterceptor, authInterceptor, errorInterceptor]),
+      withXsrfConfiguration({
+        cookieName: 'XSRF-TOKEN',
+        headerName: 'X-XSRF-TOKEN',
+      }),
     ),
     providePrimeNG({
       theme: {
