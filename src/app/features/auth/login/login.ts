@@ -9,6 +9,7 @@ import { MessageService } from 'primeng/api';
 import { Auth } from '@core/services/auth';
 import { AuthLayout } from '@shared/components/auth-layout';
 import { DemoCredentials } from '@shared/components/demo-credentials';
+import { FormError } from '@shared/components/form-error';
 import { emailValidator } from '@shared/utils/validator.util';
 
 @Component({
@@ -22,6 +23,7 @@ import { emailValidator } from '@shared/utils/validator.util';
     CardModule,
     AuthLayout,
     DemoCredentials,
+    FormError,
   ],
   templateUrl: './login.html',
   styleUrl: './login.css',

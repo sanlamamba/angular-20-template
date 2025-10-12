@@ -1,7 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
 import { Auth } from '@core/services/auth';
+import { AppLayout } from '@shared/components/app-layout';
+import { MetaService } from '@core/services/meta.service';
 import { DEMO_USERS } from '@app/core/models/user';
 import { RoleBadgePipe } from '@shared/pipes/role-badge.pipe';
 
@@ -14,12 +16,21 @@ interface AdminStat {
 
 @Component({
   selector: 'app-admin',
-  imports: [CardModule, TableModule, RoleBadgePipe],
+  imports: [CardModule, TableModule, RoleBadgePipe, AppLayout],
   templateUrl: './admin.html',
   styleUrl: './admin.css',
 })
-export class Admin {
+export class Admin implements OnInit {
   protected auth = inject(Auth);
+  private metaService = inject(MetaService);
+
+  ngOnInit() {
+    this.metaService.setPageMeta({
+      title: 'Admin Panel',
+      description: 'Manage users and system settings',
+      noIndex: true, // Don't index admin pages
+    });
+  }
 
   usersArray = DEMO_USERS;
 
