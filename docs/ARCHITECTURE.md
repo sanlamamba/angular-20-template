@@ -107,14 +107,28 @@ Using path aliases (@core, @shared, @features) for cleaner imports.
 ### HTTP Request Flow
 
 ```
-┌──────────┐      ┌─────────────┐      ┌─────────────┐
-│Component │─────▶│ API Service │─────▶│Interceptors │
-└──────────┘      └─────────────┘      └─────────────┘
-                                              │
-                                              ├─ Auth Token
-                                              ├─ Error Handling
-                                              └─ Loading State
+┌──────────┐      ┌─────────────┐      ┌──────────────┐      ┌─────────────┐
+│Component │─────▶│ API Service │─────▶│  ApiService  │─────▶│Interceptors │
+│          │      │  (Domain)   │      │    (Base)    │      │             │
+└──────────┘      └─────────────┘      └──────────────┘      └─────────────┘
+                         │                     │                      │
+                         │                     │                      ├─ Auth Token
+                         │                     ├─ Retry Logic         ├─ Error Handling
+                         │                     ├─ Error Transform     └─ Loading State
+                         │                     └─ Base URL
+                         │
+                    (UserApiService,
+                     ProductApiService,
+                     OrderApiService, etc.)
 ```
+
+**Flow:**
+
+1. Component injects domain-specific API service (e.g., `UserApiService`)
+2. Domain service extends `ApiService` base class
+3. `ApiService` handles retry logic, error transformation, base URL
+4. HTTP interceptors add authentication, handle errors, show loading states
+5. Response flows back through the chain to component
 
 ### Component Communication
 
@@ -160,6 +174,19 @@ export class Example {
 ### Service Structure
 
 ```typescript
+// Base API Service (extend for domain-specific services)
+@Injectable({ providedIn: 'root' })
+export class ProductApiService extends ApiService {
+  getProducts(): Observable<Product[]> {
+    return this.get<Product[]>('/products');
+  }
+
+  createProduct(product: CreateProductDto): Observable<Product> {
+    return this.post<Product>('/products', product);
+  }
+}
+
+// Regular Service (for app state/logic)
 @Injectable({ providedIn: 'root' })
 export class MyService {
   // Private signals
@@ -176,6 +203,73 @@ export class MyService {
     this.dataSignal.set(newData);
   }
 }
+```
+
+### API Service Pattern
+
+**BaseApiService** (`api.service.ts`)
+
+- Provides HTTP methods (GET, POST, PUT, PATCH, DELETE)
+- Automatic retry logic with exponential backoff
+- Error transformation and handling
+- Base URL configuration from environment
+- **Never inject directly** - always extend for domain-specific services
+
+**Domain-Specific Services** (extend `ApiService`)
+
+- `UserApiService` - User CRUD operations
+- `ProductApiService` - Product management
+- `OrderApiService` - Order handling
+- `Auth` - Authentication (extends ApiService)
+
+**Example Usage:**
+
+```typescript
+// 1. Create domain service
+@Injectable({ providedIn: 'root' })
+export class UserApiService extends ApiService {
+  getUsers(): Observable<User[]> {
+    return this.get<User[]>('/users');
+  }
+
+  getUserById(id: string): Observable<User> {
+    return this.get<User>(`/users/${id}`);
+  }
+}
+
+// 2. Use in component
+@Component({...})
+export class UserList {
+  private userApi = inject(UserApiService);
+  users = signal<User[]>([]);
+
+  ngOnInit() {
+    this.userApi.getUsers().subscribe({
+      next: (users) => this.users.set(users),
+      error: (err) => console.error(err)
+    });
+  }
+}
+```
+
+**Request Options:**
+
+```typescript
+// Custom retry behavior
+this.get<Data>('/endpoint', {
+  retryAttempts: 5,
+  retryDelay: 2000,
+});
+
+// Custom headers
+this.get<Data>('/endpoint', {
+  headers: { 'X-Custom': 'value' },
+});
+
+// Query parameters
+this.get<Data>('/search', {
+  params: { q: 'angular', limit: 10 },
+});
 ```
 
 ## Performance Optimizations
