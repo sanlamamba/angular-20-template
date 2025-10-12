@@ -1,0 +1,132 @@
+<app-auth-layout>
+  <ng-template pTemplate="header">
+    <div class="text-center pt-6">
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Create Account</h1>
+      <p class="text-gray-600 dark:text-gray-400 mt-2">Sign up for a new account</p>
+    </div>
+  </ng-template>
+
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <div class="space-y-2">
+      <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        Full Name
+      </label>
+      <input
+        pInputText
+        id="name"
+        type="text"
+        formControlName="name"
+        class="w-full"
+        placeholder="Enter your full name"
+        [class.ng-invalid]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched"
+      />
+      @if (registerForm.get('name')?.invalid && registerForm.get('name')?.touched) {
+        <small class="text-red-600 dark:text-red-400">
+          @if (registerForm.get('name')?.errors?.['required']) {
+            Name is required
+          }
+          @if (registerForm.get('name')?.errors?.['minlength']) {
+            Name must be at least 2 characters
+          }
+        </small>
+      }
+    </div>
+
+    <div class="space-y-2">
+      <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        Email
+      </label>
+      <input
+        pInputText
+        id="email"
+        type="email"
+        formControlName="email"
+        class="w-full"
+        placeholder="Enter your email"
+        [class.ng-invalid]="
+          registerForm.get('email')?.invalid && registerForm.get('email')?.touched
+        "
+      />
+      @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+        <small class="text-red-600 dark:text-red-400">
+          @if (registerForm.get('email')?.errors?.['required']) {
+            Email is required
+          }
+          @if (registerForm.get('email')?.errors?.['email']) {
+            Please enter a valid email
+          }
+        </small>
+      }
+    </div>
+
+    <div class="space-y-2">
+      <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        Password
+      </label>
+      <p-password
+        formControlName="password"
+        inputId="password"
+        [toggleMask]="true"
+        [feedback]="true"
+        styleClass="w-full"
+        inputStyleClass="w-full"
+        placeholder="Enter your password"
+        [class.ng-invalid]="
+          registerForm.get('password')?.invalid && registerForm.get('password')?.touched
+        "
+      />
+      @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+        <small class="text-red-600 dark:text-red-400">
+          @if (registerForm.get('password')?.errors?.['required']) {
+            Password is required
+          }
+          @if (registerForm.get('password')?.errors?.['minlength']) {
+            Password must be at least 8 characters
+          }
+        </small>
+      }
+    </div>
+
+    <div class="space-y-2">
+      <label
+        for="confirmPassword"
+        class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+      >
+        Confirm Password
+      </label>
+      <p-password
+        formControlName="confirmPassword"
+        inputId="confirmPassword"
+        [toggleMask]="true"
+        [feedback]="false"
+        styleClass="w-full"
+        inputStyleClass="w-full"
+        placeholder="Confirm your password"
+        [class.ng-invalid]="
+          registerForm.get('confirmPassword')?.invalid &&
+          registerForm.get('confirmPassword')?.touched
+        "
+      />
+      @if (
+        registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched
+      ) {
+        <small class="text-red-600 dark:text-red-400"> Please confirm your password </small>
+      }
+    </div>
+
+    <p-button
+      type="submit"
+      label="Sign Up"
+      [disabled]="registerForm.invalid || isLoading()"
+      [loading]="isLoading()"
+      styleClass="w-full"
+    />
+
+    <div class="text-center text-sm text-gray-600 dark:text-gray-400">
+      Already have an account?
+      <a routerLink="/login" class="text-primary-600 dark:text-primary-400 hover:underline ml-1">
+        Sign in
+      </a>
+    </div>
+  </form>
+</app-auth-layout>

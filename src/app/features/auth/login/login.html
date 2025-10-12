@@ -1,0 +1,75 @@
+<app-auth-layout>
+  <ng-template pTemplate="header">
+    <div class="text-center pt-6">
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Welcome Back</h1>
+      <p class="text-gray-600 dark:text-gray-400 mt-2">Sign in to your account</p>
+    </div>
+  </ng-template>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <div class="space-y-2">
+      <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        Email
+      </label>
+      <input
+        pInputText
+        id="email"
+        type="email"
+        formControlName="email"
+        class="w-full"
+        placeholder="Enter your email"
+        [class.ng-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+      />
+      @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+        <small class="text-red-600 dark:text-red-400">
+          @if (loginForm.get('email')?.errors?.['required']) {
+            Email is required
+          }
+          @if (loginForm.get('email')?.errors?.['email']) {
+            Please enter a valid email
+          }
+        </small>
+      }
+    </div>
+
+    <div class="space-y-2">
+      <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        Password
+      </label>
+      <p-password
+        formControlName="password"
+        inputId="password"
+        [toggleMask]="true"
+        [feedback]="false"
+        styleClass="w-full"
+        inputStyleClass="w-full"
+        placeholder="Enter your password"
+        [class.ng-invalid]="
+          loginForm.get('password')?.invalid && loginForm.get('password')?.touched
+        "
+      />
+      @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+        <small class="text-red-600 dark:text-red-400"> Password is required </small>
+      }
+    </div>
+
+    <p-button
+      type="submit"
+      label="Sign In"
+      [disabled]="loginForm.invalid || isLoading()"
+      [loading]="isLoading()"
+      styleClass="w-full"
+    />
+
+    <div class="text-center text-sm text-gray-600 dark:text-gray-400">
+      Don't have an account?
+      <a routerLink="/register" class="text-primary-600 dark:text-primary-400 hover:underline ml-1">
+        Sign up
+      </a>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <app-demo-credentials />
+  </ng-template>
+</app-auth-layout>
