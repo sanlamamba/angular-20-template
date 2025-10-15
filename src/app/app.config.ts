@@ -1,4 +1,4 @@
-import { ApplicationConfig, ErrorHandler, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, ErrorHandler, provideZoneChangeDetection, isDevMode } from '@angular/core';
 import { provideRouter, withPreloading, PreloadAllModules } from '@angular/router';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -17,6 +17,7 @@ import { routes } from './app.routes';
 import { loadingInterceptor } from '@core/interceptors/loading-interceptor';
 import { authInterceptor } from '@core/interceptors/auth-interceptor';
 import { errorInterceptor } from '@core/interceptors/error-interceptor';
+import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -46,6 +47,9 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     MessageService,
-    { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    { provide: ErrorHandler, useClass: GlobalErrorHandler }, provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+          }),
   ],
 };

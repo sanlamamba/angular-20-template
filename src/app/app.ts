@@ -6,10 +6,12 @@ import { TooltipModule } from 'primeng/tooltip';
 import { MessageService } from 'primeng/api';
 import { Auth } from '@core/services/auth';
 import { ThemeService } from '@core/services/theme';
+import { UpdateNotificationComponent } from '@shared/components/update-notification';
+import { SwUpdateService } from '@core/services/sw-update';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ButtonModule, ToastModule, TooltipModule],
+  imports: [RouterOutlet, ButtonModule, ToastModule, TooltipModule, UpdateNotificationComponent],
   providers: [MessageService],
   template: `
     <p-toast />
@@ -41,6 +43,7 @@ import { ThemeService } from '@core/services/theme';
       }
       <main class="transition-colors duration-200">
         <router-outlet />
+        <app-update-notification />
       </main>
     </div>
   `,
@@ -51,6 +54,7 @@ export class App {
   private messageService = inject(MessageService);
   protected auth = inject(Auth);
   protected themeService = inject(ThemeService);
+  protected swUpdate = inject(SwUpdateService); // check diff between private and protected for this
 
   handleLogout() {
     this.auth.logout();
