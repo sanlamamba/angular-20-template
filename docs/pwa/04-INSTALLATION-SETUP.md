@@ -24,7 +24,7 @@ Open your terminal in your project root and run:
 
 ```powershell
 # Navigate to your project (if not already there)
-cd c:\Users\PopodaSAN-LAMAMBA\Desktop\work\Playground\angular-20-template
+cd .\angular-20-template
 
 # Install Angular PWA
 ng add @angular/pwa
@@ -76,7 +76,7 @@ UPDATE src/index.html (987 bytes)
 
 ### 2.1 **ngsw-config.json** (Service Worker Configuration)
 
-**Location:** `c:\Users\PopodaSAN-LAMAMBA\Desktop\work\Playground\angular-20-template\ngsw-config.json`
+**Location:** `.\angular-20-template\ngsw-config.json`
 
 ```json
 {
@@ -116,7 +116,7 @@ UPDATE src/index.html (987 bytes)
 
 ### 2.2 **manifest.webmanifest** (App Manifest)
 
-**Location:** `c:\Users\PopodaSAN-LAMAMBA\Desktop\work\Playground\angular-20-template\src\manifest.webmanifest`
+**Location:** `.\angular-20-template\src\manifest.webmanifest`
 
 ```json
 {
