@@ -55,7 +55,7 @@
               },
               "namedChunks": false,
               "extractLicenses": true,
-              "serviceWorker": false,
+              "serviceWorker": "ngsw-config.json",
               "ssr": {
                 "entry": "src/main.server.ts"
               }
@@ -126,6 +126,9 @@
     }
   },
   "cli": {
-    "schematicCollections": ["angular-eslint"]
+    "schematicCollections": [
+      "angular-eslint"
+    ],
+    "analytics": false
   }
 }
